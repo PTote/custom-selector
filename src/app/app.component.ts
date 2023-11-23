@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { CreditCards } from './components/selector/selector.component';
+import creditCards from './data/credit-cards.json';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'custom-select';
+  creditCardList: CreditCards[] = creditCards;
 }

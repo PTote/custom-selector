@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import creditCards from '../../data/credit-cards.json';
+import { Component, ElementRef, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
 
-export interface CreditCards{
+export interface CreditCards {
   name: string;
   numberCard: string;
   productCard: string;
@@ -14,44 +13,67 @@ export interface CreditCards{
 })
 export class SelectorComponent implements OnInit {
 
-descriptionCard: string = '';
-numberCard: string = '';
-cardSelected!: CreditCards;
-showPlaceHolder: boolean = true;
-placeHolder: string = 'Selecciona una cuenta'
-currentCheck: number = 0;
-lastCheck: number = 0;
+  descriptionCard: string = '';
+  numberCard: string = '';
+  cardSelected!: CreditCards;
+  placeHolder: string = 'Selecciona una cuenta'
+  currentCheck: string = '';
+  lastCheck: string = '';
 
   showOptionsList: boolean = false;
-  creditCardList: CreditCards[] = creditCards;
+  // creditCardList: CreditCards[] = creditCards;
+
+  @Input() initValue: string = '';
+  @Input() showPlaceHolder: boolean = true;
+  @Input() creditCardList: CreditCards[] = [];
+  @ViewChildren('radioInput') radioInputs!: QueryList<ElementRef>;
 
   constructor() { }
 
   ngOnInit(): void {
+
+    [this.cardSelected] = this.findCard(this.initValue);
+
   }
 
-showOptions(){
-  this.showOptionsList = !this.showOptionsList;
-}
+  ngAfterViewInit(): void {
+    const currentRadio = document.getElementById(`${this.initValue}`) as HTMLInputElement;
+    currentRadio.checked = true;
+    this.lastCheck = this.initValue;
+  }
 
-optionSelected(numberCard: string, idCheck: number){
 
-this.currentCheck = idCheck;
+  showOptions() {
+    this.showOptionsList = !this.showOptionsList;
+  }
 
-[this.cardSelected] = this.creditCardList.filter((card) => card.numberCard === numberCard);
-this.showPlaceHolder = false;
-this.showOptionsList = false;
 
-console.log(this.currentCheck);
-console.log(this.lastCheck);
 
-if(this.currentCheck !== this.lastCheck && this.lastCheck > 0){
-  const radioElement = document.getElementById(`${this.lastCheck}`) as HTMLInputElement;
-  radioElement.checked = false;
-}
+  optionSelected(numberCard: string) {
+    this.currentCheck = numberCard;
 
-this.lastCheck = idCheck;
+    const currentRadio = document.getElementById(`${numberCard}`) as HTMLInputElement;
 
-}
+    const cardSelected = this.findCard(numberCard);
+
+    if (cardSelected && cardSelected.length > 0) {
+      [this.cardSelected] = cardSelected;
+      this.showPlaceHolder = false;
+      this.showOptionsList = false;
+    }
+
+    if (this.currentCheck !== this.lastCheck && this.lastCheck !== '') {
+      const radioLast = document.getElementById(`${this.lastCheck}`) as HTMLInputElement;
+      radioLast.checked = false;
+    }
+
+    this.lastCheck = numberCard;
+    currentRadio.checked = true;
+
+  }
+
+  findCard(numberCard: string){
+    return this.creditCardList.filter((card) => card.numberCard === numberCard);
+  }
 
 }
