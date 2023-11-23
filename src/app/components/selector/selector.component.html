@@ -1,21 +1,21 @@
 
-<div class="selector-container">
+<div class="selector-container" (click)="showOptions()">
 
-  <div class="selector">
-    <span *ngIf="showPlaceHolder" class="placeholder-text" (click)="showOptions()">{{placeHolder}}</span>
-    <div class="option-selected" *ngIf="!showPlaceHolder" (click)="showOptions()">
+  <div class="selector" >
+    <span *ngIf="showPlaceHolder" class="placeholder-text" >{{placeHolder}}</span>
+    <div class="option-selected" *ngIf="!showPlaceHolder" >
       <div class="description">
         <span class="description__card">{{cardSelected.numberCard}} | {{cardSelected.productCard}}</span>
         <span class="description__name">{{cardSelected.name}}</span>
       </div>
     </div>
     <div class="icon-selector">
-      <i (click)="showOptions()">▼</i>
+      <i >▼</i>
     </div>
   </div>
 
   <div [ngClass]="{'selector-list': !showOptionsList, 'selector-list-active' : showOptionsList}" >
-    <div class="selector-list__item" *ngFor="let card of creditCardList; let i = index" (click)="optionSelected(card.numberCard)" id="{{i+1}}">
+    <div class="selector-list__item" *ngFor="let card of creditCardList; let i = index" (click)="optionSelected(card.numberCard)" id="{{i+1}}" (click)="showOptions()">
       <div class="input-check">
         <input type="radio" name="" id="{{card.numberCard}}" #radioInput>
       </div>
